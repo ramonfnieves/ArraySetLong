@@ -1,4 +1,6 @@
-import javax.management.RuntimeErrorException;
+import java.util.Arrays;
+
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 public class ArraySetLong {
 
@@ -32,6 +34,7 @@ public class ArraySetLong {
 	 * isEmpty()
 	 * Returns true if the target set has no element
 	 */
+
 	public boolean isEmpty(){
 		return numElements==0;
 	}
@@ -52,7 +55,6 @@ public class ArraySetLong {
 		else{
 			throw new RuntimeException("Attempted to find max of empty set");
 		}
-
 	}
 
 	public long min(){
@@ -85,7 +87,7 @@ public class ArraySetLong {
 		}
 		return m;
 	}
-	
+
 	public boolean isMember(long key){
 		for (int i = 0; i < numElements; i++) {
 			if(theElements[i]==key){
@@ -93,5 +95,50 @@ public class ArraySetLong {
 			}
 		}
 		return false;
+	}
+
+	public void addMember(long key){
+		if(!isMember(key)){
+			if(theElements.length <= numElements){
+				theElements = Arrays.copyOf(theElements, numElements*2);
+			}
+			theElements[numElements] = key;
+			numElements++;
+		}
+	}
+	
+	public void deleteMember(long key){
+		if(isMember(key)){
+			for(int i = 0; i < numElements; i++){
+				if(theElements[i]==key){
+					theElements[i]=theElements[numElements-1];
+					numElements--;
+					return;
+				}
+			}
+		}
+	}
+	
+	public ArraySetLong union(ArraySetLong s){
+		int resultSize = 2*Math.max(this.cardinality()+s.cardinality(), 10);
+		ArraySetLong result = new ArraySetLong(resultSize);
+		for(int i=0; i<this.cardinality(); i++){
+			result.addMember(this.theElements[i]);
+		}
+		for(int i=0; i<s.cardinality(); i++){
+			result.addMember(s.theElements[i]);
+		}
+		return result;
+	}
+	
+	public ArraySetLong intersection(ArraySetLong s){
+		int resultSize = 2*Math.max(this.cardinality(), s.cardinality());
+		ArraySetLong result = new ArraySetLong(resultSize);
+		for(int i=0; i<this.cardinality(); i++){
+			if(s.isMember(this.theElements[i])){
+				result.addMember(this.theElements[i]);
+			}
+		}
+		return result;
 	}
 }
