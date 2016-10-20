@@ -4,6 +4,15 @@ import org.junit.Test;
 
 public class ArraySetTest {
 
+	ElementType [] stringArray =
+		{
+				new StringElementType("Hello"),
+				new StringElementType("Hello World"),
+				new StringElementType("!")
+		};
+	
+	ArraySet stringSet = new ArraySet(stringArray, 3);
+	
 	ElementType [] a = 
 
 		{
@@ -67,6 +76,12 @@ public class ArraySetTest {
 		assertFalse("isMember(): Number found in empty set", emptySet.isMember(new LongElementType(6)));
 	}
 
+	@Test
+	public void testisMemberWithStrings() {
+		assertTrue("isMember(): Did not find set member", stringSet.isMember(new StringElementType("Hello")));
+		assertFalse("isMember(): Found non-existent member", stringSet.isMember(new StringElementType("ICOM4015")));
+	}
+	
 	@Test
 	public void testaddMember() {
 		s.addMember(new LongElementType(6));
