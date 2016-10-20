@@ -2,28 +2,28 @@ import java.util.Arrays;
 
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
-public class ArraySetLong {
+public class ArraySet {
 
-	private long[] theElements;
+	private ElementType[] theElements;
 	private int numElements;
 
 	/*
-	 * ArraySetLong(int n)
+	 * ArraySet(int n)
 	 * Create and initially empty set with initial capacity
 	 */
 
-	public ArraySetLong(int n){
+	public ArraySet(int n){
 		numElements = 0;
-		theElements = new long [n];
+		theElements = new ElementType [n];
 	}
 
 	/*
 	 * 
 	 */
 
-	public ArraySetLong(long []numbers, int n){
+	public ArraySet(ElementType []numbers, int n){
 		numElements = n;
-		theElements = new long[n*2];
+		theElements = new ElementType[n*2];
 
 		for (int i = 0; i < n; i++) {
 			theElements[i]=numbers[i];
@@ -43,11 +43,11 @@ public class ArraySetLong {
 		return numElements;
 	}
 
-	public long max(){
+	public ElementType max(){
 		if(!this.isEmpty()){
-			long m = theElements[0];
+			ElementType m = theElements[0];
 			for (int i = 1; i < numElements; i++) {
-				if(theElements[i]>m){
+				if(theElements[i].greaterThan(m)){
 					m=theElements[i];
 				}
 			}return m;
@@ -57,11 +57,11 @@ public class ArraySetLong {
 		}
 	}
 
-	public long min(){
+	public ElementType min(){
 		if(!this.isEmpty()){
-			long m = theElements[0];
+			ElementType m = theElements[0];
 			for (int i = 1; i < numElements; i++) {
-				if(theElements[i]<m){
+				if(m.greaterThan(theElements[i])){
 					m=theElements[i];
 				}
 			}
@@ -75,7 +75,7 @@ public class ArraySetLong {
 	public long sum(){
 		long m = 0;
 		for (int i = 0; i < numElements; i++) {
-			m+=theElements[i];
+			m += theElements[i].valueOf();
 		}
 		return m;
 	}
@@ -83,21 +83,21 @@ public class ArraySetLong {
 	public long product(){
 		long m = 1;
 		for (int i = 0; i < numElements; i++) {
-			m*=theElements[i];
+			m*=theElements[i].valueOf();
 		}
 		return m;
 	}
 
-	public boolean isMember(long key){
+	public boolean isMember(ElementType key){
 		for (int i = 0; i < numElements; i++) {
-			if(theElements[i]==key){
+			if(theElements[i].equals(key)){
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void addMember(long key){
+	public void addMember(ElementType key){
 		if(!isMember(key)){
 			if(theElements.length <= numElements){
 				theElements = Arrays.copyOf(theElements, numElements*2);
@@ -107,10 +107,10 @@ public class ArraySetLong {
 		}
 	}
 	
-	public void deleteMember(long key){
+	public void deleteMember(ElementType key){
 		if(isMember(key)){
 			for(int i = 0; i < numElements; i++){
-				if(theElements[i]==key){
+				if(theElements[i].equals(key)){
 					theElements[i]=theElements[numElements-1];
 					numElements--;
 					return;
@@ -119,9 +119,9 @@ public class ArraySetLong {
 		}
 	}
 	
-	public ArraySetLong union(ArraySetLong s){
+	public ArraySet union(ArraySet s){
 		int resultSize = 2*Math.max(this.cardinality()+s.cardinality(), 10);
-		ArraySetLong result = new ArraySetLong(resultSize);
+		ArraySet result = new ArraySet(resultSize);
 		for(int i=0; i<this.cardinality(); i++){
 			result.addMember(this.theElements[i]);
 		}
@@ -131,9 +131,9 @@ public class ArraySetLong {
 		return result;
 	}
 	
-	public ArraySetLong intersection(ArraySetLong s){
+	public ArraySet intersection(ArraySet s){
 		int resultSize = 2*Math.max(this.cardinality(), s.cardinality());
-		ArraySetLong result = new ArraySetLong(resultSize);
+		ArraySet result = new ArraySet(resultSize);
 		for(int i=0; i<this.cardinality(); i++){
 			if(s.isMember(this.theElements[i])){
 				result.addMember(this.theElements[i]);
